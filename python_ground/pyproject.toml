@@ -1,0 +1,24 @@
+[project]
+name = "python_ground"
+version = "0.1.0"
+description = "Python playground"
+authors = [
+    {name = "SharzyL", email = "me@sharzy.in"},
+]
+dependencies = ["numpy>=2.2.3"]
+requires-python = ">=3.12"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project.scripts]
+python_ground = "python_ground:main"
+
+# run with `pdm start`
+[tool.pdm.scripts]
+start = { call = "python_ground:main" }
+
+[tool.pdm]
+distribution = true
