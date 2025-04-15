@@ -7,11 +7,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    cpp_cmake.url = "path:./cpp_cmake";
-    cuda_cmake.url = "path:./cuda_cmake";
-    lean.url = "path:./lean";
-    python_pdm.url = "path:./python_pdm";
-    rust.url = "path:./rust";
+    cpp_cmake.url = ./cpp_cmake;
+    cuda_cmake.url = ./cuda_cmake;
+    lean.url = ./lean;
+    python_pdm.url = ./python_pdm;
+    rust.url = ./rust;
   };
 
   outputs = { self, nixpkgs, flake-utils, treefmt-nix, ... }@inputs:
