@@ -1,5 +1,5 @@
 {
-  description = "rust playground";
+  description = "lean playground";
 
   inputs = {
     nixpkgs.url = "nixpkgs";
@@ -15,14 +15,24 @@
         rec {
           legacyPackages = pkgs;
 
-          defaultPackage = pkgs.rustPlatform.buildRustPackage {
-            name = "rust";
+          defaultPackage = pkgs.stdenv.mkDerivation {
+            name = "lean";
             src = with pkgs.lib.fileset; toSource {
               root = ./.;
               fileset = fileFilter (file: file.name != "flake.nix") ./.;
             };
-            useFetchCargoVendor = true;
-            cargoHash = "sha256-ls+44z3+/TF4Qc3QUuCLcT8HtJJZnq+bhX7yfVzVkKU=";
+
+            buildInputs = with pkgs; [
+              lean4
+            ];
+
+           # just check, nothing built
+            buildPhase = ''
+              runHook preBuild
+              lean ./src/Hello.lean
+              mkdir -p $out
+              runHook postBuild
+            '';
           };
 
           devShell = defaultPackage.overrideAttrs (_: { });

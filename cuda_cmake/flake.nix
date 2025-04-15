@@ -1,5 +1,5 @@
 {
-  description = "cuda playground";
+  description = "cuda cmake playground";
 
   inputs = {
     nixpkgs.url = "nixpkgs";
@@ -22,7 +22,7 @@
 
           # only gcc stdenv is supported, clangStdenv produces linker error
           defaultPackage = pkgs.gcc14Stdenv.mkDerivation {
-            name = "cuda_ground";
+            name = "cuda_cmake";
 
             nativeBuildInputs = with pkgs; [ cmake ninja ];
             buildInputs = with pkgs; [

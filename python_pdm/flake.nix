@@ -1,5 +1,5 @@
 {
-  description = "python playground";
+  description = "python pdm playground";
 
   inputs = {
     nixpkgs.url = "nixpkgs";
@@ -16,7 +16,7 @@
           legacyPackages = pkgs;
 
           defaultPackage = pkgs.python3.pkgs.buildPythonPackage {
-            name = "python_ground";
+            name = "python_pdm";
             pyproject = true;
             nativeBuildInputs = with pkgs.python3.pkgs; [ pdm-backend ];
 

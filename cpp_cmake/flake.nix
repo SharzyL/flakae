@@ -1,5 +1,5 @@
 {
-  description = "cpp playground";
+  description = "cpp cmake playground";
 
   inputs = {
     nixpkgs.url = "nixpkgs";
@@ -16,7 +16,7 @@
           legacyPackages = pkgs;
 
           defaultPackage = pkgs.stdenv.mkDerivation {
-            name = "cpp_ground";
+            name = "cpp_cmake";
             nativeBuildInputs = with pkgs; [ cmake ninja ];
             buildInputs = with pkgs; [
               spdlog
