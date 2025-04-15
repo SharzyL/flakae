@@ -20,3 +20,6 @@ jobs:
       - name: Run Nix Build
         run: nix build
 
+      - name: Run flake check
+        run: ./check.sh
+

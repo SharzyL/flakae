@@ -2,6 +2,10 @@
   inputs = {
     nixpkgs.url = "nixpkgs";
     flake-utils.url = "flake-utils";
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     cpp_cmake.url = "path:./cpp_cmake";
     cuda_cmake.url = "path:./cuda_cmake";
@@ -10,7 +14,7 @@
     rust.url = "path:./rust";
   };
 
-  outputs = { self, nixpkgs, flake-utils, ... }@inputs:
+  outputs = { self, nixpkgs, flake-utils, treefmt-nix, ... }@inputs:
     let
       subflake_names = with nixpkgs.lib; filter
         (n: pathExists ./${n}/flake.nix)
@@ -20,13 +24,22 @@
       (system:
         let
           pkgs = import nixpkgs { inherit system; };
-        in
-        rec {
-          packages = nixpkgs.lib.genAttrs
-            subflake_names
-            (subflake: inputs.${subflake}.defaultPackage.${system});
+          treefmtEval = treefmt-nix.lib.evalModule pkgs {
+            programs.clang-format.enable = true;
+            programs.nixpkgs-fmt.enable = true;
+          };
 
-          defaultPackage = pkgs.linkFarm "flakae" packages;
+          subflake_pkgs = nixpkgs.lib.genAttrs
+            subflake_names
+            (subflake: inputs.${subflake}.packages.${system}.default);
+        in
+        {
+          packages = {
+            default = pkgs.linkFarm "flakae" subflake_pkgs;
+          } // subflake_pkgs;
+          formatter = treefmtEval.config.build.wrapper;
+          checks.formatting = treefmtEval.config.build.check self;
+
         }) // {
       inherit inputs;
       templates = nixpkgs.lib.genAttrs subflake_names
