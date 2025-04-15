@@ -16,16 +16,24 @@
         (n: pathExists ./${n}/flake.nix)
         (attrNames inputs);
     in
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = import nixpkgs { inherit system; };
-      in
-      rec {
-        packages = nixpkgs.lib.genAttrs
-          subflake_names
-          (subflake: inputs.${subflake}.defaultPackage.${system});
+    flake-utils.lib.eachDefaultSystem
+      (system:
+        let
+          pkgs = import nixpkgs { inherit system; };
+        in
+        rec {
+          packages = nixpkgs.lib.genAttrs
+            subflake_names
+            (subflake: inputs.${subflake}.defaultPackage.${system});
 
-        defaultPackage = pkgs.linkFarm "flakae" packages;
-      });
+          defaultPackage = pkgs.linkFarm "flakae" packages;
+        }) // {
+      inherit inputs;
+      templates = nixpkgs.lib.genAttrs subflake_names
+        (name: {
+          path = ./${name};
+          description = "Template ${name}";
+        });
+    };
 
 }
