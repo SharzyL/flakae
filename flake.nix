@@ -2,6 +2,7 @@
   inputs = {
     nixpkgs.url = "nixpkgs";
     flake-utils.url = "flake-utils";
+
     cpp_cmake.url = "path:./cpp_cmake";
     cuda_cmake.url = "path:./cuda_cmake";
     lean.url = "path:./lean";
@@ -24,11 +25,7 @@
           subflake_names
           (subflake: inputs.${subflake}.defaultPackage.${system});
 
-        defaultPackage = pkgs.symlinkJoin
-          {
-            name = "flakae";
-            paths = builtins.attrValues packages;
-          };
+        defaultPackage = pkgs.linkFarm "flakae" packages;
       });
 
 }
