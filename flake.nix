@@ -21,9 +21,14 @@
       subflake_names = with nixpkgs.lib; filter
         (n: pathExists ./${n}/flake.nix)
         (attrNames inputs);
-      overlay = final: prev: (nixpkgs.lib.genAttrs subflake_names
-        (subflake: inputs.${subflake}.packages.${final.stdenv.system}.default)
+      gen_subflake_pkgs = system: builtins.listToAttrs (builtins.map
+        (subflake: {
+          name = "${subflake}_playground";
+          value = inputs.${subflake}.packages.${system}.default;
+        })
+        subflake_names
       );
+      overlay = final: prev: gen_subflake_pkgs final.stdenv.system;
     in
     flake-utils.lib.eachDefaultSystem
       (system:
@@ -37,9 +42,7 @@
             programs.nixpkgs-fmt.enable = true;
           };
 
-          subflake_pkgs = nixpkgs.lib.genAttrs
-            subflake_names
-            (subflake: inputs.${subflake}.packages.${system}.default);
+          subflake_pkgs = gen_subflake_pkgs system;
         in
         {
           packages = {

@@ -1,10 +1,10 @@
-{ lib, stdenv, cmake, ninja, cpp_cmake_lib }:
+{ lib, stdenv, cmake, ninja, cpp_cmake_lib_playground }:
 
 stdenv.mkDerivation {
   name = "cpp_cmake_tests";
   nativeBuildInputs = [ cmake ninja ];
   buildInputs = [
-    cpp_cmake_lib
+    cpp_cmake_lib_playground
   ];
   src = with lib.fileset; toSource {
     root = ./.;
