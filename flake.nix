@@ -9,6 +9,7 @@
 
     cpp_cmake.url = ./cpp_cmake;
     cuda_cmake.url = ./cuda_cmake;
+    cpp_meson.url = ./cpp_meson;
     lean.url = ./lean;
     python_pdm.url = ./python_pdm;
     rust.url = ./rust;
