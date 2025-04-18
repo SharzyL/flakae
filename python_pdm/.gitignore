@@ -1,5 +1,6 @@
+.direnv
 .idea
-result
+result*
 .venv
 .pdm-python
 __pycache__
