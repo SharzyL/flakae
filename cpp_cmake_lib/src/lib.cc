@@ -1,6 +1,6 @@
 #include <fmt/core.h>
 
-#include "lib.h"
+#include "foo/lib.h"
 
 void foo() {
   int i = 42;

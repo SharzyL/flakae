@@ -1,5 +1,7 @@
-# Cpp Ground
+## Develop Build
 
 ```console
-$ cmake -B build -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+$ nix develop
+$ meson setup builddir
+$ meson compile -C builddir
 ```
