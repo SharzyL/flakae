@@ -2,6 +2,11 @@
 
 set -e
 
+echo
+echo "checking ."
+nix build
+nix flake check
+
 for f in *; do
   if [ -f "$f"/flake.nix ]; then
     echo
@@ -27,6 +32,3 @@ for f in *; do
   fi
 done
 
-echo
-echo "checking ."
-nix flake check

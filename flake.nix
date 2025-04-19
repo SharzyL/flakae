@@ -33,7 +33,6 @@
       );
 
     in
-    # flake-parts boilerplate
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         inputs.treefmt-nix.flakeModule
