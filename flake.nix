@@ -1,7 +1,9 @@
 {
+  description = "A collection of Nix flakes";
+
   inputs = {
     nixpkgs.url = "nixpkgs";
-    flake-utils.url = "flake-utils";
+    flake-parts.url = "flake-parts";
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -16,50 +18,55 @@
     rust.url = ./rust;
   };
 
-  outputs = { self, nixpkgs, flake-utils, treefmt-nix, ... }@inputs:
+  outputs = { flake-parts, ... }@inputs:
     let
-      subflake_names = with nixpkgs.lib; filter
-        (n: pathExists ./${n}/flake.nix)
-        (attrNames inputs);
-      gen_subflake_pkgs = system: builtins.listToAttrs (builtins.map
-        (subflake: {
-          name = "${subflake}_playground";
-          value = inputs.${subflake}.packages.${system}.default;
-        })
+      lib = inputs.nixpkgs.lib;
+      subflake_names = lib.filter
+        (n: lib.pathExists ./${n}/flake.nix)
+        (lib.attrNames (builtins.readDir ./.));
+
+      subflake_pkg_names = map (n: "${n}_playground") subflake_names;
+
+      overlay = lib.composeManyExtensions (map
+        (subflake: inputs.${subflake}.overlays.default)
         subflake_names
       );
-      overlay = final: prev: gen_subflake_pkgs final.stdenv.system;
-    in
-    flake-utils.lib.eachDefaultSystem
-      (system:
-        let
-          pkgs = import nixpkgs {
-            inherit system;
-            overlays = [ overlay ];
-          };
-          treefmtEval = treefmt-nix.lib.evalModule pkgs {
-            programs.clang-format.enable = true;
-            programs.nixpkgs-fmt.enable = true;
-          };
 
-          subflake_pkgs = gen_subflake_pkgs system;
+    in
+    # flake-parts boilerplate
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [
+        inputs.treefmt-nix.flakeModule
+      ];
+
+      systems = lib.systems.flakeExposed;
+      perSystem = { system, pkgs, ... }:
+        let
+          subflake_pkgs = lib.genAttrs subflake_pkg_names (n: pkgs.${n});
         in
         {
+          _module.args.pkgs = import inputs.nixpkgs {
+            inherit system;
+            overlays = [ overlay ];
+            config.allowUnfree = true;
+          };
+
+          legacyPackages = pkgs;
           packages = {
             default = pkgs.linkFarm "flakae" subflake_pkgs;
           } // subflake_pkgs;
-          formatter = treefmtEval.config.build.wrapper;
-          checks = {
-            formatting = treefmtEval.config.build.check self;
-          } // (import ./tests pkgs);
 
-        }) // {
-      inherit inputs;
-      templates = nixpkgs.lib.genAttrs subflake_names
-        (name: {
-          path = ./${name};
-          description = "Template ${name}";
-        });
+          checks = import ./tests pkgs;
+        };
+
+      flake.overlays.default = overlay;
+
+      flake = {
+        templates = lib.genAttrs subflake_names
+          (name: {
+            path = ./${name};
+            description = "Template ${name}";
+          });
+      };
     };
-
 }

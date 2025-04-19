@@ -3,19 +3,20 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs";
-    flake-utils.url = "flake-utils";
+    flake-parts.url = "flake-parts";
     treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
+      url = "treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, treefmt-nix }@inputs:
+  outputs = { flake-parts, ... }@inputs:
     let
       name = "cuda_cmake_playground";
       makePkg = { lib, stdenv, cmake, ninja, cudaPackages, autoAddDriverRunpath }:
         stdenv.mkDerivation {
-          inherit name;
+          pname = name;
+          version = "0.1.0";
 
           nativeBuildInputs = [ cmake ninja ];
           buildInputs = [
@@ -32,53 +33,64 @@
               ./.;
           };
         };
-      overlay = final: _: {
-        cudaStdenv = final.gcc14Stdenv;
-        mycudaPackages = final.cudaPackages_12_8;
-        ${name} = final.callPackage makePkg {
-          stdenv = final.cudaStdenv;
-          cudaPackages = final.mycudaPackages;
-        };
-      };
-    in
-    flake-utils.lib.eachDefaultSystem
-      (system:
-        let
-          pkgs = import nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-            overlays = [ overlay ];
-          };
-          pkg = pkgs.${name};
 
-          treefmtEval = treefmt-nix.lib.evalModule pkgs {
-            programs.clang-format.enable = true;
-            programs.nixpkgs-fmt.enable = true;
-          };
+      shellOverride = pkgs: oldAttrs: {
+        name = "${name}-dev-shell";
+        version = null;
+
+        # https://github.com/NixOS/nixpkgs/issues/214945
+        nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ (with pkgs; [
+          clang-tools
+        ]);
+
+        # make ninja output colorful
+        shellHook = ''
+          export NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE -fdiagnostics-color=always"
+          export NIX_LDFLAGS="$NIX_LDFLAGS -rpath /run/opengl-driver/lib"
+          export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/run/opengl-driver/lib:${pkgs.xorg.libXtst}/lib:${pkgs.systemd}/lib"
+        '';
+      };
+
+      overlay = final: _:
+        let
+          cudaStdenv = final.gcc14Stdenv;
+          mycudaPackages = final.cudaPackages_12_8;
         in
         {
-          devShells.default = pkg.overrideAttrs (oldAttrs: {
-            # https://github.com/NixOS/nixpkgs/issues/214945
-            nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ (with pkgs; [
-              clang-tools
-            ]);
+          ${name} = final.callPackage makePkg {
+            stdenv = cudaStdenv;
+            cudaPackages = mycudaPackages;
+          };
+        };
 
-            # make ninja output colorful
-            shellHook = ''
-              export NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE -fdiagnostics-color=always"
-              export NIX_LDFLAGS="$NIX_LDFLAGS -rpath /run/opengl-driver/lib"
-              export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/run/opengl-driver/lib:${pkgs.xorg.libXtst}/lib:${pkgs.systemd}/lib"
-            '';
-          });
+    in
+    # flake-parts boilerplate
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [
+        inputs.treefmt-nix.flakeModule
+      ];
 
-          legacyPackages = pkgs;
-          packages.default = pkg;
-          formatter = treefmtEval.config.build.wrapper;
-          checks.formatting = treefmtEval.config.build.check self;
-        }
-      )
-    // {
-      inherit inputs; # for easier introspection via nix repl
-      overlays.default = overlay;
+      flake.overlays.default = overlay;
+
+      systems = inputs.nixpkgs.lib.systems.flakeExposed;
+
+      perSystem = { system, config, pkgs, ... }: {
+        packages.default = config.legacyPackages.${name};
+        packages."${name}" = config.packages.default;
+        legacyPackages = pkgs;
+
+        _module.args.pkgs = import inputs.nixpkgs {
+          inherit system;
+          overlays = [ overlay ];
+          config.allowUnfree = true;
+        };
+
+        devShells.default = config.packages.default.overrideAttrs (shellOverride pkgs);
+
+        treefmt = {
+          programs.clang-format.enable = true;
+          programs.nixpkgs-fmt.enable = true;
+        };
+      };
     };
 }

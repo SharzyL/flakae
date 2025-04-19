@@ -3,19 +3,20 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs";
-    flake-utils.url = "flake-utils";
+    flake-parts.url = "flake-parts";
     treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
+      url = "treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, treefmt-nix }@inputs:
+  outputs = { flake-parts, ... }@inputs:
     let
       name = "python_pdm_playground";
       makePkg = { lib, buildPythonPackage, pdm-backend, numpy }:
         buildPythonPackage {
-          inherit name;
+          pname = name;
+          version = "0.1.0";
           pyproject = true;
           nativeBuildInputs = [ pdm-backend ];
 
@@ -30,29 +31,37 @@
               ./.;
           };
         };
-      overlay = final: _: { ${name} = final.python3Packages.callPackage makePkg { }; };
-    in
-    flake-utils.lib.eachDefaultSystem
-      (system:
-        let
-          pkgs = import nixpkgs { inherit system; overlays = [ overlay ]; };
-          pkg = pkgs.${name};
+      overlay = final: _: {
+        ${name} = final.python3Packages.callPackage makePkg { };
+      };
 
-          treefmtEval = treefmt-nix.lib.evalModule pkgs {
-            programs.mypy.enable = true;
-            programs.nixpkgs-fmt.enable = true;
-          };
-        in
-        {
-          devShells.default = pkg;
-          legacyPackages = pkgs;
-          packages.default = pkg;
-          formatter = treefmtEval.config.build.wrapper;
-          checks.formatting = treefmtEval.config.build.check self;
-        }
-      )
-    // {
-      inherit inputs; # for easier introspection via nix repl
-      overlays.default = overlay;
+    in
+    # flake-parts boilerplate
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [
+        inputs.treefmt-nix.flakeModule
+      ];
+
+      flake.overlays.default = overlay;
+
+      systems = inputs.nixpkgs.lib.systems.flakeExposed;
+
+      perSystem = { system, config, pkgs, ... }: {
+        packages.default = config.legacyPackages.${name};
+        packages.${name} = config.packages.default;
+        legacyPackages = pkgs;
+
+        _module.args.pkgs = import inputs.nixpkgs {
+          inherit system;
+          overlays = [ overlay ];
+        };
+
+        devShells.default = config.packages.default;
+
+        treefmt = {
+          programs.mypy.enable = true;
+          programs.nixpkgs-fmt.enable = true;
+        };
+      };
     };
 }
