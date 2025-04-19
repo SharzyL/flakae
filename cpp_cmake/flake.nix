@@ -28,6 +28,7 @@
               (file: ! (lib.elem file.name [ "flake.nix" "flake.lock" ]))
               ./.;
           };
+          meta.mainProgram = name;
         };
 
       shellOverride = pkgs: oldAttrs: {

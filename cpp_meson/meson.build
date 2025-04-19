@@ -1,6 +1,6 @@
 project('cpp_meson_playground', 'cpp', version: '0.1.0')
 
-executable('main', './src/main.cc', dependencies: dependency('spdlog'), install: true)
+executable('cpp_meson_playground', './src/main.cc', dependencies: dependency('spdlog'), install: true)
 
 libname = 'foo'
 lib = library(libname, './src/lib.cc', dependencies: dependency('fmt'), install: true)

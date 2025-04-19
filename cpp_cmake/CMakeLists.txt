@@ -9,8 +9,8 @@ find_package(fmt    10.2.1 REQUIRED)
 
 message(STATUS "Init ${PROJECT_NAME}. Build Type: ${CMAKE_BUILD_TYPE}")
 
-add_executable(main src/main.cc)
-target_link_libraries(main fmt::fmt spdlog::spdlog)
+add_executable(${PROJECT_NAME} src/main.cc)
+target_link_libraries(${PROJECT_NAME} fmt::fmt spdlog::spdlog)
 
-install(TARGETS main)
+install(TARGETS ${PROJECT_NAME})
 

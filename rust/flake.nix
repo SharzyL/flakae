@@ -25,6 +25,7 @@
 
           useFetchCargoVendor = true;
           cargoHash = "sha256-ls+44z3+/TF4Qc3QUuCLcT8HtJJZnq+bhX7yfVzVkKU=";
+          meta.mainProgram = name;
         };
       overlay = final: _: { ${name} = final.callPackage makePkg { }; };
 

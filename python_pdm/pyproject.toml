@@ -1,5 +1,5 @@
 [project]
-name = "python_ground"
+name = "python_pdm_playground"
 version = "0.1.0"
 description = "Python playground"
 authors = [
@@ -14,11 +14,11 @@ requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
 [project.scripts]
-python_ground = "python_ground:main"
+python_pdm_playground = "python_pdm_playground:main"
 
 # run with `pdm start`
 [tool.pdm.scripts]
-start = { call = "python_ground:main" }
+start = { call = "python_pdm_playground:main" }
 
 [tool.pdm]
 distribution = true

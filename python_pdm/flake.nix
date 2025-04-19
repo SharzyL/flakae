@@ -30,6 +30,7 @@
               (file: ! (lib.elem file.name [ "flake.nix" "flake.lock" ]))
               ./.;
           };
+          meta.mainProgram = name;
         };
       overlay = final: _: {
         ${name} = final.python3Packages.callPackage makePkg { };

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
 
-project(cuda_cmake_ground LANGUAGES CUDA CXX)
+project(cuda_cmake_playground LANGUAGES CUDA CXX)
 
 find_package(CUDAToolkit REQUIRED)
 
@@ -15,7 +15,7 @@ function(add_cuda_executable name)
     target_compile_options(${name} PUBLIC "--extended-lambda")
 endfunction()
 
-add_cuda_executable(main src/main.cu)
+add_cuda_executable(${PROJECT_NAME} src/main.cu)
 
-install(TARGETS main)
+install(TARGETS ${PROJECT_NAME})
 
