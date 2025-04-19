@@ -5,7 +5,7 @@
     nixpkgs.url = "nixpkgs";
     flake-parts.url = "flake-parts";
     treefmt-nix = {
-      url = "treefmt-nix";
+      url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -32,6 +32,12 @@
           };
           meta.mainProgram = name;
         };
+
+      shellOverride = pkgs: oldAttrs: {
+        nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ (with pkgs; [
+          mypy
+        ]);
+      };
       overlay = final: _: {
         ${name} = final.python3Packages.callPackage makePkg { };
       };
@@ -57,10 +63,13 @@
           overlays = [ overlay ];
         };
 
-        devShells.default = config.packages.default;
+        devShells.default = config.packages.default.overrideAttrs (shellOverride pkgs);
 
         treefmt = {
-          programs.mypy.enable = true;
+          programs.mypy = {
+            enable = true;
+            directories.".".extraPythonPackages = config.packages.default.propagatedBuildInputs;
+          };
           programs.nixpkgs-fmt.enable = true;
         };
       };

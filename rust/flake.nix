@@ -5,7 +5,7 @@
     nixpkgs.url = "nixpkgs";
     flake-parts.url = "flake-parts";
     treefmt-nix = {
-      url = "treefmt-nix";
+      url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -54,6 +54,7 @@
 
         treefmt = {
           programs.rustfmt.enable = true;
+          programs.nixpkgs-fmt.enable = true;
         };
       };
     };
