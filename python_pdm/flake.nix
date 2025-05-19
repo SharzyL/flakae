@@ -36,6 +36,8 @@
       shellOverride = pkgs: oldAttrs: {
         nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ (with pkgs; [
           mypy
+          ruff
+          pdm
         ]);
       };
       overlay = final: _: {
@@ -66,6 +68,7 @@
         devShells.default = config.packages.default.overrideAttrs (shellOverride pkgs);
 
         treefmt = {
+          programs.ruff-format.enable = true;
           programs.mypy = {
             enable = true;
             directories.".".extraPythonPackages = config.packages.default.propagatedBuildInputs;
