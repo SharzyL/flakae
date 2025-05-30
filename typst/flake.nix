@@ -16,14 +16,14 @@
 
   outputs = { flake-parts, typix, ... }@inputs:
     let
-      name = "mydoc";
+      name = "typst_playground";
       makePkg = { lib, stdenv, typst, cascadia-code }:
         typix.lib.${stdenv.system}.mkTypstDerivation {
           name = name + ".pdf";
           src = lib.fileset.toSource {
             root = ./.;
             fileset = lib.fileset.unions [
-              ./mydoc.typ
+              ./${name}.typ
               ./templates
               ./assets
             ];

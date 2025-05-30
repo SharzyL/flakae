@@ -16,6 +16,7 @@
     lean.url = ./lean;
     python_pdm.url = ./python_pdm;
     rust.url = ./rust;
+    typst.url = ./typst;
   };
 
   outputs = { flake-parts, ... }@inputs:
