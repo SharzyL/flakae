@@ -22,3 +22,8 @@ $ nix flake new --template github:SharzyL/flakae#cpp_cmake ./cpp_cmake
 
 Replace `cpp_cmake` with the desired template name, which is a directory name in this project root.
 
+To manually synchronize nixpkgs to the system version:
+
+```console
+nix flake update --override-flake nixpkgs github:NixOS/nixpkgs/$(jq < ~/.config/nix/registry.json '.flakes | map(select(.from.id == "nixpkgs")) | .[0].to.rev' -r)
+```
