@@ -65,7 +65,13 @@
           overlays = [ overlay ];
         };
 
-        devShells.default = config.packages.default.overrideAttrs (shellOverride pkgs);
+        devShells.default = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            python3
+            pdm
+            ruff
+          ];
+        };
 
         treefmt = {
           programs.ruff-format.enable = true;
