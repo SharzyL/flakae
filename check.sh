@@ -14,7 +14,7 @@ for f in *; do
     pushd "$f" >/dev/null
     nix flake check
 
-    if [[ "$f" = "lean" || "$f" = *lib* ]]; then
+    if [[ "$f" = "lean" || "$f" = "typst" || "$f" = *lib* ]]; then
       echo "skip running for $f"
       nix build
     elif [[ "$f" = cuda* ]]; then
