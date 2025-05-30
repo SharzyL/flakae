@@ -6,7 +6,7 @@
 #show: codly-init
 #codly(lang-format: none)
 
-#show: avenir-theme.with(
+#show: modernism-theme.with(
   config-info(
     title: [Introduction to Typst],
     authors: ("Alice",),

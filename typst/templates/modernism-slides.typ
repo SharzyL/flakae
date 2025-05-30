@@ -95,7 +95,7 @@
   )
 })
 
-#let avenir-theme(
+#let modernism-theme(
   aspect-ratio: "16-9",
   font: "Avenir Next",
   monofont: "Cascadia Code",
