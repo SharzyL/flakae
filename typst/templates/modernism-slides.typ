@@ -95,7 +95,7 @@
   )
 })
 
-#let modernism-theme(
+#let modernism-slides(
   aspect-ratio: "16-9",
   font: "Avenir Next",
   monofont: "Cascadia Code",

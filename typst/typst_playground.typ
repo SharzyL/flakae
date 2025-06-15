@@ -1,30 +1,14 @@
-#import "templates/modernism-slides.typ": *
-#import "@preview/codly:1.3.0": *
+For any $k, x$, denote by $v_(k, x)$ the probability that A wins B by $x$ scores on round $k$.
 
-#set text(lang: "en")
+Now $
+p_(2m + 1) &= sum_(x >= 2) v_(2m + 1, x) = sum_(x >= 3) v_(2m + 1, x) \
+&= sum_(x >= 3) (p dot.c v_(2m, x - 1) + q dot.c v_(2m, x + 1)) \
+&= p sum_(x >= 2) v_(2m, x) + q sum_(x >= 4) v_(2m, x) \
+&= p dot.c p_(2m) + q dot.c (p_(2m) - v_(2m, 2)) \
+&= p_(2m) - q v_(2m, 2) \
+&= p_(2m) - binom(2m, m + 1) p^(m + 1) q^(m).
+$
 
-#show: codly-init
-#codly(lang-format: none)
-
-#show: modernism-theme.with(
-  config-info(
-    title: [Introduction to Typst],
-    authors: ("Alice",),
-    date: datetime(year: 2025, month: 5, day: 30),
-  ),
-  config-common(handout: false),
-)
-
-#title-slide()
-
-= Section
-
-== Introduction
-
-```cpp
-#include <typeinfo>
-```
-
-#split((1fr, 1fr))[#lorem(10)][#lorem(10)]
-
-#ending-slide()
+Similarly $
+q_(2m + 1) = q_(2m) - binom(2m, m + 1) p^(m) q^(m + 1).
+$
