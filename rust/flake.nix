@@ -23,7 +23,7 @@
               ./.;
           };
 
-          cargoHash = "sha256-ls+44z3+/TF4Qc3QUuCLcT8HtJJZnq+bhX7yfVzVkKU=";
+          cargoHash = "sha256-+SYzNqGgQr3TmK8qEN8EsNo1KOu0cT3UEB4tiAjk5As=";
           meta.mainProgram = name;
         };
       overlay = final: _: { ${name} = final.callPackage makePkg { }; };

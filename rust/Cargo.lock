@@ -170,7 +170,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rust_ground"
+name = "rust_playground"
 version = "0.1.0"
 dependencies = [
  "tokio",

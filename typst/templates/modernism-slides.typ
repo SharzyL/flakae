@@ -157,3 +157,20 @@
   dash: "dashed",
 ))
 #let split(portions, ..args) = grid(columns: portions, ..args)
+
+// #import "@preview/touying:0.6.1": *
+//
+// #import "templates/modernism-slides.typ": *
+//
+// #set text(lang: "en")
+//
+// #show: modernism-slides.with(
+//   config-info(
+//     title: [Title],
+//     authors: ("Me",),
+//     date: datetime(year: 2025, month: 11, day: 7),
+//   ),
+//   config-common(handout: false),
+// )
+//
+// #title-slide()
