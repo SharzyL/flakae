@@ -54,6 +54,7 @@
       shellOverride = pkgs: oldAttrs: {
         name = "${name}.pdf-dev-shell";
         version = null;
+        src = null;
 
         nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ (with pkgs; [
           typstyle

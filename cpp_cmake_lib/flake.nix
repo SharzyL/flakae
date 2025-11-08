@@ -34,6 +34,7 @@
       shellOverride = pkgs: oldAttrs: {
         name = "${name}-dev-shell";
         version = null;
+        src = null;
 
         # https://github.com/NixOS/nixpkgs/issues/214945
         nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ (with pkgs; [
