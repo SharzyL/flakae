@@ -17,6 +17,7 @@
     python_pdm.url = ./python_pdm;
     rust.url = ./rust;
     typst.url = ./typst;
+    adhoc.url = ./adhoc;
   };
 
   outputs = { flake-parts, ... }@inputs:
