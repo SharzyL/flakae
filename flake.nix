@@ -11,6 +11,7 @@
 
     cpp_cmake.url = ./cpp_cmake;
     cpp_cmake_lib.url = ./cpp_cmake_lib;
+    cpp_cmake_modules.url = ./cpp_cmake_modules;
     cuda_cmake.url = ./cuda_cmake;
     cpp_meson.url = ./cpp_meson;
     lean.url = ./lean;

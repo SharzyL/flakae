@@ -1,0 +1,6 @@
+.direnv
+cmake-build-*
+/build
+.idea
+.cache
+result
