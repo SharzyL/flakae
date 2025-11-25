@@ -4,7 +4,9 @@ set -e
 
 echo
 echo "checking ."
-nix build
+if [! -v GITHUB_ACTION ]; then
+  nix build
+fi
 nix flake check
 
 for f in *; do
@@ -15,16 +17,20 @@ for f in *; do
     nix flake check
 
     if [[ "$f" = "lean" || "$f" = "typst" || "$f" = "adhoc" || "$f" = *lib* ]]; then
-      echo "skip running for $f"
+      echo "run nix build for $f"
       nix build
     elif [[ "$f" = cuda* ]]; then
-      if [ -f /run/opengl-driver/lib/libcuda.so ]; then
+      if [ -v GITHUB_ACTION ]; then
+        echo "skip checking cuda on GitHub action since it is too large"
+      elif [ -f /run/opengl-driver/lib/libcuda.so ]; then
+        echo "run nix run for $f"
         nix run
       else
-        echo "skip running for cuda project without cuda driver"
+        echo "run nix build for $f since no cuda driver detected"
         nix build
       fi
     else
+      echo "run nix run for $f"
       nix run
     fi
 
