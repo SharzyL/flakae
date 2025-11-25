@@ -7,8 +7,12 @@
   set document(title: title)
   align(center, text(1.5em, title))
   align(center, {
-    for author in authors {
-      text(1em, author, style: "italic")
+    if type(authors) == array {
+      for author in authors {
+        text(1em, author, style: "italic")
+      }
+    } else {
+      text(1em, authors, style: "italic")
     }
   })
 }
