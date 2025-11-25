@@ -26,6 +26,7 @@
           ];
 
           # TODO: these libs does not work currently
+          # https://github.com/llvm/llvm-project/issues/96147
           buildInputs = [
             spdlog
             fmt

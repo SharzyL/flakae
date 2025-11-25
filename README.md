@@ -1,6 +1,8 @@
 # Flakae
 
-A collection of minimum `flake.nix` templates for projects of different languages. Each playground provides
+Aiming to provide best practices for developing with Nix.
+
+This project includes a collection of minimum `flake.nix` templates for projects of different languages. Each playground provides
 
 - `nix develop` for development environment.
 - `nix build` for production build and packaging.
