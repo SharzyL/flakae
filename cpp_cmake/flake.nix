@@ -48,7 +48,7 @@
       };
 
       overlay = final: prev: {
-        ${name} = final.callPackage makePkg { };
+        ${name} = final.callPackage makePkg { stdenv = final.libcxxStdenv; };
       };
 
     in

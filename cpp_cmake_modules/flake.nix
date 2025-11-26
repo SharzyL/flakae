@@ -15,7 +15,7 @@
       name = "cpp_cmake_modules_playground";
 
       # see discussion from https://github.com/llvm/llvm-project/issues/121709
-      makePkg = { lib, stdenv, cmake, ninja, spdlog, fmt, libcxx, clang-tools }:
+      makePkg = { lib, stdenv, cmake, ninja, spdlog, fmt, clang-tools, libcxx }:
         stdenv.mkDerivation {
           pname = name;
           version = "0.1.0";
@@ -44,9 +44,9 @@
           env.NIX_CFLAGS_COMPILE = toString [
             # https://github.com/llvm/llvm-project/issues/120215
             # to find the `libc++.modules.json`, clang driver searches for libc++.a
-            "-B${lib.getLib libcxx}/lib"
+            "-B${lib.getLib stdenv.cc.libcxx}/lib"
 
-            "-isystem ${lib.getDev libcxx}/include/c++/v1" # for `__config` and other headers
+            "-isystem ${lib.getDev stdenv.cc.libcxx}/include/c++/v1" # for `__config` and other headers
           ];
 
           meta.mainProgram = name;
@@ -69,7 +69,11 @@
       };
 
       overlay = final: prev: {
-        ${name} = final.callPackage makePkg { stdenv = final.libcxxStdenv; };
+        ${name} = final.callPackage makePkg {
+          # we must use libcxxStdenv from llvmPackages for darwin,
+          # otherwise libcxx shipped by Apple is used, which has no modules support
+          stdenv = final.llvmPackages_latest.libcxxStdenv;
+        };
       };
 
     in
