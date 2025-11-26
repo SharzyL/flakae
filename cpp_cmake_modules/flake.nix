@@ -25,7 +25,7 @@
             clang-tools
           ];
 
-          # TODO: these libs does not work currently
+          # TODO: these libs do not work currently
           # https://github.com/llvm/llvm-project/issues/96147
           buildInputs = [
             spdlog
