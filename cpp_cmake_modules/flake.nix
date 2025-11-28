@@ -26,46 +26,48 @@
             };
           };
         in
-        stdenv.mkDerivation {
-          pname = name;
-          version = "0.1.0";
-          strictDeps = true;
+        assert stdenv.cc.libcxx != null;
+        stdenv.mkDerivation
+          {
+            pname = name;
+            version = "0.1.0";
+            strictDeps = true;
 
-          nativeBuildInputs = [
-            cmake
-            ninja
-            clang-tools
-          ];
-
-          buildInputs =
-            if stdenv.cc.libcxx != null then [
-              spdlog_libcxx
-              fmt_libcxx
-            ] else [
-              spdlog
-              fmt
+            nativeBuildInputs = [
+              cmake
+              ninja
+              clang-tools
             ];
 
-          # https://github.com/llvm/llvm-project/issues/121709
-          hardeningDisable = [ "fortify" ];
+            buildInputs =
+              if stdenv.cc.libcxx != null then [
+                spdlog_libcxx
+                fmt_libcxx
+              ] else [
+                spdlog
+                fmt
+              ];
 
-          src = with lib.fileset; toSource {
-            root = ./.;
-            fileset = fileFilter
-              (file: ! (lib.elem file.name [ "flake.nix" "flake.lock" ]))
-              ./.;
+            # https://github.com/llvm/llvm-project/issues/121709
+            hardeningDisable = [ "fortify" ];
+
+            src = with lib.fileset; toSource {
+              root = ./.;
+              fileset = fileFilter
+                (file: ! (lib.elem file.name [ "flake.nix" "flake.lock" ]))
+                ./.;
+            };
+
+            env.NIX_CFLAGS_COMPILE = toString [
+              # https://github.com/llvm/llvm-project/issues/120215
+              # to find the `libc++.modules.json`, clang driver searches for libc++.a
+              "-B${lib.getLib stdenv.cc.libcxx}/lib"
+
+              "-isystem ${lib.getDev stdenv.cc.libcxx}/include/c++/v1" # for `__config` and other headers
+            ];
+
+            meta.mainProgram = name;
           };
-
-          env.NIX_CFLAGS_COMPILE = toString [
-            # https://github.com/llvm/llvm-project/issues/120215
-            # to find the `libc++.modules.json`, clang driver searches for libc++.a
-            "-B${lib.getLib stdenv.cc.libcxx}/lib"
-
-            "-isystem ${lib.getDev stdenv.cc.libcxx}/include/c++/v1" # for `__config` and other headers
-          ];
-
-          meta.mainProgram = name;
-        };
 
       shellOverride = pkgs: oldAttrs: {
         name = "${name}-dev-shell";
