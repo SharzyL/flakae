@@ -40,7 +40,7 @@
             ];
 
             buildInputs =
-              if stdenv.cc.libcxx != null then [
+              if stdenv.cc.libcxx != null && fmt.stdenv.cc.libcxx == null then [
                 spdlog_libcxx
                 fmt_libcxx
               ] else [

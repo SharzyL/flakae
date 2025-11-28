@@ -17,6 +17,7 @@
         stdenv.mkDerivation {
           pname = name;
           version = "0.1.0";
+          strictDeps = true;
           nativeBuildInputs = [ cmake ninja ];
           buildInputs = [
             spdlog
@@ -48,7 +49,7 @@
       };
 
       overlay = final: prev: {
-        ${name} = final.callPackage makePkg { stdenv = final.libcxxStdenv; };
+        ${name} = final.callPackage makePkg { };
       };
 
     in
