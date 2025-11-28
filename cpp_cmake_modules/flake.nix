@@ -14,7 +14,8 @@
     let
       name = "cpp_cmake_modules_playground";
 
-      # see discussion from https://github.com/llvm/llvm-project/issues/121709
+      # Here we demonstrates hacks requires to make clang+libcxx work
+      # for gcc+libstdcxx, hacks can be removed as long as gcc version >= 15
       makePkg = { lib, stdenv, cmake, ninja, spdlog, fmt, clang-tools, libcxx, catch2_3 }:
         let
           fmt_libcxx = fmt.override { inherit stdenv; };
