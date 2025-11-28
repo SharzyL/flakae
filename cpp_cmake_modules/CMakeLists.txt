@@ -39,7 +39,7 @@ target_sources(${PROJECT_NAME}
       src/util.cppm
 )
 
-target_link_libraries(${PROJECT_NAME} fmt::fmt spdlog::spdlog)
+target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt spdlog::spdlog)
 
 install(TARGETS ${PROJECT_NAME})
 

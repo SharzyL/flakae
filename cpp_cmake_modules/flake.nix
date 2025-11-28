@@ -15,22 +15,36 @@
       name = "cpp_cmake_modules_playground";
 
       # see discussion from https://github.com/llvm/llvm-project/issues/121709
-      makePkg = { lib, stdenv, cmake, ninja, spdlog, fmt, clang-tools, libcxx }:
+      makePkg = { lib, stdenv, cmake, ninja, spdlog, fmt, clang-tools, libcxx, catch2_3 }:
+        let
+          fmt_libcxx = fmt.override { inherit stdenv; };
+          spdlog_libcxx = spdlog.override {
+            inherit stdenv;
+            fmt = fmt_libcxx;
+            catch2_3 = catch2_3.override {
+              inherit stdenv;
+            };
+          };
+        in
         stdenv.mkDerivation {
           pname = name;
           version = "0.1.0";
+          strictDeps = true;
+
           nativeBuildInputs = [
             cmake
             ninja
             clang-tools
           ];
 
-          # TODO: these libs do not work currently
-          # https://github.com/llvm/llvm-project/issues/96147
-          buildInputs = [
-            spdlog
-            fmt
-          ];
+          buildInputs =
+            if stdenv.cc.libcxx != null then [
+              spdlog_libcxx
+              fmt_libcxx
+            ] else [
+              spdlog
+              fmt
+            ];
 
           # https://github.com/llvm/llvm-project/issues/121709
           hardeningDisable = [ "fortify" ];

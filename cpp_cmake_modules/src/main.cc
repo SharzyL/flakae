@@ -1,8 +1,12 @@
+#include <spdlog/spdlog.h>
+
 import std;
 import foo;
 
+
 auto main() -> int {
-  std::println("{}", gcd(1, 3));
+  spdlog::error("gcd(114, 514) = {}", gcd(114, 514));
+  std::println("std::gcd(114, 514) = {}", std::gcd(114, 514));
 
   return 0;
 }
