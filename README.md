@@ -1,12 +1,12 @@
 # Flakae
 
-Aiming to provide best practices for developing with Nix.
+A set of project templates for Nix-powered development. Aiming to align with latest best practices in an opinionated way.
 
-This project includes a collection of minimum `flake.nix` templates for projects of different languages. Each playground provides
+This project includes a collection of `flake.nix` templates for projects of different languages. Each playground provides
 
 - `nix develop` for development environment.
 - `nix build` for production build and packaging.
-- `nix fmt` for code formatting
+- `nix fmt` for code formatting.
 
 Recommended to be used with [direnv](https://github.com/direnv/direnv/) and [nix-direnv](https://github.com/nix-community/nix-direnv/).
 
@@ -24,8 +24,10 @@ $ nix flake new --template github:SharzyL/flakae#cpp_cmake ./cpp_cmake
 
 Replace `cpp_cmake` with the desired template name, which is a directory name in this project root.
 
-To manually synchronize nixpkgs to the system version:
+## Developer Notes
+
+To synchronize nixpkgs to the system version (as in `~/.config/nix/registry.json`):
 
 ```console
-nix flake update --override-flake nixpkgs github:NixOS/nixpkgs/$(jq < ~/.config/nix/registry.json '.flakes | map(select(.from.id == "nixpkgs")) | .[0].to.rev' -r)
+./bump.sh
 ```
