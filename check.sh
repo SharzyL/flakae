@@ -4,7 +4,7 @@ set -e
 
 echo
 echo "checking ."
-if [! -v GITHUB_ACTION ]; then
+if [ ! -v GITHUB_ACTION ]; then
   nix build
 fi
 nix flake check
