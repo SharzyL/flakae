@@ -618,18 +618,18 @@
         "type": "indirect"
       }
     },
-    "python_pdm": {
+    "python_uv": {
       "inputs": {
         "flake-parts": "flake-parts_9",
         "nixpkgs": "nixpkgs_9",
         "treefmt-nix": "treefmt-nix_8"
       },
       "locked": {
-        "path": "python_pdm",
+        "path": "python_uv",
         "type": "path"
       },
       "original": {
-        "path": "python_pdm",
+        "path": "python_uv",
         "type": "path"
       },
       "parent": []
@@ -645,7 +645,7 @@
         "flake-parts": "flake-parts_7",
         "lean": "lean",
         "nixpkgs": "nixpkgs_8",
-        "python_pdm": "python_pdm",
+        "python_uv": "python_uv",
         "rust": "rust",
         "treefmt-nix": "treefmt-nix_10",
         "typst": "typst"
@@ -858,7 +858,7 @@
     "treefmt-nix_8": {
       "inputs": {
         "nixpkgs": [
-          "python_pdm",
+          "python_uv",
           "nixpkgs"
         ]
       },

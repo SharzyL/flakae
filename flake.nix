@@ -15,7 +15,7 @@
     cuda_cmake.url = ./cuda_cmake;
     cpp_meson.url = ./cpp_meson;
     lean.url = ./lean;
-    python_pdm.url = ./python_pdm;
+    python_uv.url = ./python_uv;
     rust.url = ./rust;
     typst.url = ./typst;
     adhoc.url = ./adhoc;

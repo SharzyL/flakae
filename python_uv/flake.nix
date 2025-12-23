@@ -1,5 +1,5 @@
 {
-  description = "python pdm playground";
+  description = "uv playground";
 
   inputs = {
     nixpkgs.url = "nixpkgs";
@@ -12,13 +12,13 @@
 
   outputs = { flake-parts, ... }@inputs:
     let
-      name = "python_pdm_playground";
-      makePkg = { lib, buildPythonPackage, pdm-backend, numpy }:
+      name = "python_uv_playground";
+      makePkg = { lib, buildPythonPackage, uv-build, numpy }:
         buildPythonPackage {
           pname = name;
           version = "0.1.0";
           pyproject = true;
-          nativeBuildInputs = [ pdm-backend ];
+          nativeBuildInputs = [ uv-build ];
 
           propagatedBuildInputs = [
             numpy
@@ -30,14 +30,17 @@
               (file: ! (lib.elem file.name [ "flake.nix" "flake.lock" ]))
               ./.;
           };
-          meta.mainProgram = name;
+          meta.mainProgram = "play";
         };
 
       shellOverride = pkgs: oldAttrs: {
+        name = "${name}-dev-shell";
+        version = null;
+        src = null;
         nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ (with pkgs; [
-          mypy
+          uv
+          ty
           ruff
-          pdm
         ]);
       };
       overlay = final: _: {
@@ -58,19 +61,12 @@
       perSystem = { system, config, pkgs, ... }: {
         packages.default = config.legacyPackages.${name};
         packages.${name} = config.packages.default;
+        devShells.default = config.packages.default.overrideAttrs (shellOverride pkgs);
         legacyPackages = pkgs;
 
         _module.args.pkgs = import inputs.nixpkgs {
           inherit system;
           overlays = [ overlay ];
-        };
-
-        devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            python3
-            pdm
-            ruff
-          ];
         };
 
         treefmt = {

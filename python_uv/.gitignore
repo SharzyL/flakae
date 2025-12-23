@@ -5,3 +5,4 @@ result*
 .pdm-python
 __pycache__
 dist
+*.egg-info
