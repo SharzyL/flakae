@@ -91,6 +91,12 @@
           # we must use libcxxStdenv from llvmPackages for darwin,
           # otherwise libcxx shipped by Apple is used, which has no modules support
           stdenv = final.llvmPackages_latest.libcxxStdenv;
+
+
+          # cherrypick of https://github.com/NixOS/nixpkgs/pull/462747
+          clang-tools = final.llvmPackages.callPackage ./nix/clang-tools {
+            enableLibcxx = true;
+          };
         };
       };
 

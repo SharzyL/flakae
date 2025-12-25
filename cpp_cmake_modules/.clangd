@@ -1,1 +1,4 @@
 CompilationDatabase: build
+Diagnostics:
+  Suppress:
+    - new_abi_tag_on_redeclaration
