@@ -31,3 +31,53 @@ To synchronize nixpkgs to the system version (as in `~/.config/nix/registry.json
 ```console
 ./bump.sh
 ```
+
+## Git Hooks Example
+
+Pre-commit hook that performs format checks
+
+```bash
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+nix fmt -- --fail-on-change
+```
+
+Pre-commit hook that performs flake checks
+
+```bash
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+nix flake check
+```
+
+## GitHub CI Workflow Example
+
+```yaml
+name: Nix Flake Check
+
+on:
+  push:
+    branches: [ goshujin ]
+  pull_request:
+    branches: [ goshujin ]
+
+jobs:
+  nix-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+
+      - name: Check Nix flake
+        run: |
+          nix build
+          nix flake check
+```
