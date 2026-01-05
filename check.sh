@@ -5,33 +5,33 @@ set -e
 echo
 echo "checking ."
 if [ ! -v GITHUB_ACTION ]; then
-  nix build
+  nix build --no-warn-dirty
 fi
-nix flake check
+nix flake check --no-warn-dirty
 
 for f in *; do
   if [ -f "$f"/flake.nix ]; then
     echo
     echo "checking ./$f"
     pushd "$f" >/dev/null
-    nix flake check
+    nix flake check --no-warn-dirty
 
     if [[ "$f" = "lean" || "$f" = "typst" || "$f" = "adhoc" || "$f" = *lib* ]]; then
       echo "run nix build for $f"
-      nix build
+      nix build --no-warn-dirty
     elif [[ "$f" = cuda* ]]; then
       if [ -v GITHUB_ACTION ]; then
         echo "skip checking cuda on GitHub action since it is too large"
       elif [ -f /run/opengl-driver/lib/libcuda.so ]; then
         echo "run nix run for $f"
-        nix run
+        nix run --no-warn-dirty
       else
         echo "run nix build for $f since no cuda driver detected"
-        nix build
+        nix build --no-warn-dirty
       fi
     else
       echo "run nix run for $f"
-      nix run
+      nix run --no-warn-dirty
     fi
 
     popd >/dev/null

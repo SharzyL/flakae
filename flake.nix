@@ -18,6 +18,7 @@
     python_uv.url = ./python_uv;
     rust.url = ./rust;
     typst.url = ./typst;
+    ts_yarn.url = ./ts_yarn;
     adhoc.url = ./adhoc;
   };
 
@@ -28,7 +29,13 @@
         (n: lib.pathExists ./${n}/flake.nix)
         (lib.attrNames (builtins.readDir ./.));
 
-      subflake_pkg_names = map (n: "${n}_playground") subflake_names;
+      subflake_pkg_names = map
+        (n:
+          let
+            pkgs = inputs.${n}.packages.aarch64-linux;
+          in
+          with builtins; head (filter (n: n != "default") (attrNames pkgs)))
+        subflake_names;
 
       overlay = lib.composeManyExtensions (map
         (subflake: inputs.${subflake}.overlays.default)

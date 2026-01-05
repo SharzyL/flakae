@@ -16,11 +16,12 @@
       makePkg = { stdenv, yarn-berry }:
         stdenv.mkDerivation {
           pname = name;
+          version = "0.1.0";
+
           nativeBuildInputs = [
             # whatever deps
             yarn-berry
           ];
-          version = "0.1.0";
 
           buildCommand = ''
             mkdir -p $out

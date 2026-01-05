@@ -1,3 +1,8 @@
-#include <algorithm>
+#include <numeric>
+#include <spdlog/spdlog.h>
 
-int main(int argc, char *argv[]) { return 0; }
+auto main() -> int {
+  spdlog::info("gcd(114, 514) = {}", std::gcd(114, 514));
+
+  return 0;
+}
