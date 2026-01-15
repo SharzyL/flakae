@@ -9,33 +9,25 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    cpp_cmake.url = ./cpp_cmake;
-    cpp_cmake_lib.url = ./cpp_cmake_lib;
-    cpp_cmake_modules.url = ./cpp_cmake_modules;
-    cuda_cmake.url = ./cuda_cmake;
-    cpp_meson.url = ./cpp_meson;
-    lean.url = ./lean;
-    python_uv.url = ./python_uv;
-    rust.url = ./rust;
-    typst.url = ./typst;
-    ts_yarn.url = ./ts_yarn;
-    adhoc.url = ./adhoc;
+    cpp_cmake.url = ./flakae/cpp_cmake;
+    cpp_cmake_lib.url = ./flakae/cpp_cmake_lib;
+    cpp_cmake_modules.url = ./flakae/cpp_cmake_modules;
+    cuda_cmake.url = ./flakae/cuda_cmake;
+    cpp_meson.url = ./flakae/cpp_meson;
+    lean.url = ./flakae/lean;
+    python_uv.url = ./flakae/python_uv;
+    rust.url = ./flakae/rust;
+    typst.url = ./flakae/typst;
+    ts_yarn.url = ./flakae/ts_yarn;
+    adhoc.url = ./flakae/adhoc;
   };
 
   outputs = { flake-parts, ... }@inputs:
     let
       lib = inputs.nixpkgs.lib;
-      subflake_names = lib.filter
-        (n: lib.pathExists ./${n}/flake.nix)
-        (lib.attrNames (builtins.readDir ./.));
+      subflake_names = lib.attrNames (builtins.readDir ./flakae);
 
-      subflake_pkg_names = map
-        (n:
-          let
-            pkgs = inputs.${n}.packages.aarch64-linux;
-          in
-          with builtins; head (filter (n: n != "default") (attrNames pkgs)))
-        subflake_names;
+      subflakes = lib.genAttrs subflake_names (n: inputs.${n});
 
       overlay = lib.composeManyExtensions (map
         (subflake: inputs.${subflake}.overlays.default)
@@ -51,7 +43,14 @@
       systems = lib.systems.flakeExposed;
       perSystem = { system, pkgs, ... }:
         let
-          subflake_pkgs = lib.genAttrs subflake_pkg_names (n: pkgs.${n});
+          subflake_pkgs = lib.genAttrs subflake_names (n:
+            let
+              pkg_name = with builtins; head (filter
+                (n: n != "default")
+                (attrNames (inputs.${n}.packages.aarch64-linux)));
+            in
+            pkgs.${pkg_name}
+          );
         in
         {
           _module.args.pkgs = import inputs.nixpkgs {
@@ -61,11 +60,12 @@
           };
 
           legacyPackages = pkgs;
-          packages = {
-            default = pkgs.linkFarm "flakae" subflake_pkgs;
-          } // subflake_pkgs;
+          packages = subflake_pkgs;
 
-          checks = import ./tests pkgs;
+          checks = removeAttrs
+            (pkgs.callPackage ./check.nix {
+              inherit subflake_pkgs;
+            }) [ "overrideAttrs" "overrideDerivation" "override" ];
         };
 
       flake.overlays.default = overlay;
@@ -73,7 +73,7 @@
       flake = {
         templates = lib.genAttrs subflake_names
           (name: {
-            path = ./${name};
+            path = ./flakae/${name};
             description = "Template ${name}";
           });
       };

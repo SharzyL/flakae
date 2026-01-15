@@ -7,11 +7,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "path": "adhoc",
+        "path": "flakae/adhoc",
         "type": "path"
       },
       "original": {
-        "path": "adhoc",
+        "path": "flakae/adhoc",
         "type": "path"
       },
       "parent": []
@@ -23,11 +23,11 @@
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "path": "cpp_cmake",
+        "path": "flakae/cpp_cmake",
         "type": "path"
       },
       "original": {
-        "path": "cpp_cmake",
+        "path": "flakae/cpp_cmake",
         "type": "path"
       },
       "parent": []
@@ -39,11 +39,11 @@
         "treefmt-nix": "treefmt-nix_3"
       },
       "locked": {
-        "path": "cpp_cmake_lib",
+        "path": "flakae/cpp_cmake_lib",
         "type": "path"
       },
       "original": {
-        "path": "cpp_cmake_lib",
+        "path": "flakae/cpp_cmake_lib",
         "type": "path"
       },
       "parent": []
@@ -55,11 +55,11 @@
         "treefmt-nix": "treefmt-nix_4"
       },
       "locked": {
-        "path": "cpp_cmake_modules",
+        "path": "flakae/cpp_cmake_modules",
         "type": "path"
       },
       "original": {
-        "path": "cpp_cmake_modules",
+        "path": "flakae/cpp_cmake_modules",
         "type": "path"
       },
       "parent": []
@@ -71,11 +71,11 @@
         "treefmt-nix": "treefmt-nix_5"
       },
       "locked": {
-        "path": "cpp_meson",
+        "path": "flakae/cpp_meson",
         "type": "path"
       },
       "original": {
-        "path": "cpp_meson",
+        "path": "flakae/cpp_meson",
         "type": "path"
       },
       "parent": []
@@ -87,11 +87,11 @@
         "treefmt-nix": "treefmt-nix_6"
       },
       "locked": {
-        "path": "cuda_cmake",
+        "path": "flakae/cuda_cmake",
         "type": "path"
       },
       "original": {
-        "path": "cuda_cmake",
+        "path": "flakae/cuda_cmake",
         "type": "path"
       },
       "parent": []
@@ -307,11 +307,11 @@
         "treefmt-nix": "treefmt-nix_7"
       },
       "locked": {
-        "path": "lean",
+        "path": "flakae/lean",
         "type": "path"
       },
       "original": {
-        "path": "lean",
+        "path": "flakae/lean",
         "type": "path"
       },
       "parent": []
@@ -671,11 +671,11 @@
         "treefmt-nix": "treefmt-nix_8"
       },
       "locked": {
-        "path": "python_uv",
+        "path": "flakae/python_uv",
         "type": "path"
       },
       "original": {
-        "path": "python_uv",
+        "path": "flakae/python_uv",
         "type": "path"
       },
       "parent": []
@@ -705,11 +705,11 @@
         "treefmt-nix": "treefmt-nix_9"
       },
       "locked": {
-        "path": "rust",
+        "path": "flakae/rust",
         "type": "path"
       },
       "original": {
-        "path": "rust",
+        "path": "flakae/rust",
         "type": "path"
       },
       "parent": []
@@ -972,11 +972,11 @@
         "treefmt-nix": "treefmt-nix_11"
       },
       "locked": {
-        "path": "ts_yarn",
+        "path": "flakae/ts_yarn",
         "type": "path"
       },
       "original": {
-        "path": "ts_yarn",
+        "path": "flakae/ts_yarn",
         "type": "path"
       },
       "parent": []
@@ -1010,11 +1010,11 @@
         "typix": "typix"
       },
       "locked": {
-        "path": "typst",
+        "path": "flakae/typst",
         "type": "path"
       },
       "original": {
-        "path": "typst",
+        "path": "flakae/typst",
         "type": "path"
       },
       "parent": []

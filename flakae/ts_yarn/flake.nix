@@ -64,6 +64,8 @@
             yarn-berry.yarnBerryConfigHook
             nodejs
           ];
+
+          meta.mainProgram = name;
         })
       ;
 

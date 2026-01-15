@@ -19,6 +19,3 @@ jobs:
         with:
           install_url: "https://releases.nixos.org/nix/nix-2.28.1/install"
 
-      - name: Run flake check
-        run: ./check.sh
-
