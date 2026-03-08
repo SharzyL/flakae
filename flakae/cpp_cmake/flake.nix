@@ -44,6 +44,8 @@
 
         # make ninja output colorful
         shellHook = ''
+          export CMAKE_EXPORT_COMPILE_COMMANDS=1
+          export CMAKE_GENERATOR=Ninja
           export NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE -fdiagnostics-color=always"
         '';
       };

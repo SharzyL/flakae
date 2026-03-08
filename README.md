@@ -81,3 +81,12 @@ jobs:
           nix build
           nix flake check
 ```
+
+## Direnv Example
+
+```bash
+use flake
+watch_file pkg.nix
+PATH_add $(nix build --no-link --print-out-paths nixpkgs#pnpm)/bin
+PATH_add $(nix build --no-link --print-out-paths nixpkgs#nodejs)/bin
+```
