@@ -26,7 +26,6 @@ find_package(fmt    10.2.1 REQUIRED)
 
 add_executable(${PROJECT_NAME})
 target_sources(${PROJECT_NAME} PRIVATE src/main.cc)
-# target_link_libraries(${PROJECT_NAME} fmt::fmt spdlog::spdlog)
 
 install(TARGETS ${PROJECT_NAME})
 
