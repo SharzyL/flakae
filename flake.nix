@@ -27,8 +27,6 @@
       lib = inputs.nixpkgs.lib;
       subflake_names = lib.attrNames (builtins.readDir ./flakae);
 
-      subflakes = lib.genAttrs subflake_names (n: inputs.${n});
-
       overlay = lib.composeManyExtensions (map
         (subflake: inputs.${subflake}.overlays.default)
         subflake_names

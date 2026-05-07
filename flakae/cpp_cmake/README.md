@@ -2,6 +2,6 @@
 
 ```console
 $ nix develop
-$ cmake -B build -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+$ cmake -B build -DCMAKE_BUILD_TYPE=Debug
 $ cmake --build build
 ```
