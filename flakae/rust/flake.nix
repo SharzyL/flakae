@@ -37,11 +37,11 @@
       shellOverride = pkgs: oldAttrs: {
         name = "${name}-dev-shell";
         version = null;
-        src = null;
         nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ (with pkgs; [
           clippy
         ]);
         shellHook = ''
+          unset RUST_LOG
           echo RUST_TOOLCHAIN: ${oldAttrs.passthru.toolchain}
         '';
       };

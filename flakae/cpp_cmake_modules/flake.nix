@@ -16,7 +16,7 @@
 
       # Here we demonstrates hacks requires to make clang+libcxx work
       # for gcc+libstdcxx, hacks can be removed as long as gcc version >= 15
-      makePkg = { lib, stdenv, cmake, ninja, spdlog, fmt, clang-tools, libcxx, catch2_3 }:
+      makePkg = { lib, stdenv, cmake, ninja, spdlog, fmt, clang-tools, libcxx, catch2_3, llvm }:
         let
           fmt_libcxx = fmt.override { inherit stdenv; };
           spdlog_libcxx = spdlog.override {
@@ -38,6 +38,10 @@
               cmake
               ninja
               clang-tools
+
+              # with IPO enabled, cmake archives the `import std` library with llvm-ar,
+              # which is not provided by the binutils of libcxxStdenv
+              llvm
             ];
 
             buildInputs =
@@ -91,6 +95,7 @@
           # we must use libcxxStdenv from llvmPackages for darwin,
           # otherwise libcxx shipped by Apple is used, which has no modules support
           stdenv = final.llvmPackages_latest.libcxxStdenv;
+          llvm = final.llvmPackages_latest.llvm;
 
 
           # cherrypick of https://github.com/NixOS/nixpkgs/pull/462747
