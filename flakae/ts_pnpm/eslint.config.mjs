@@ -9,6 +9,6 @@ export default defineConfig(
   tseslint.configs.recommended,
   {
     // Ignore build artifacts
-    ignores: ["dist/", "node_modules/", ".pnp*", ".yarn/"],
+    ignores: ["dist/", "node_modules/"],
   },
 );

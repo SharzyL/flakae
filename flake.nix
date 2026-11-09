@@ -18,7 +18,7 @@
     python_uv.url = ./flakae/python_uv;
     rust.url = ./flakae/rust;
     typst.url = ./flakae/typst;
-    ts_yarn.url = ./flakae/ts_yarn;
+    ts_pnpm.url = ./flakae/ts_pnpm;
     adhoc.url = ./flakae/adhoc;
   };
 

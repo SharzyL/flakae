@@ -10,17 +10,20 @@
 
   outputs = { flake-parts, ... }@inputs:
     let
-      name = "yarn_playground";
+      name = "ts_pnpm_playground";
       makePkg =
         { lib
         , stdenv
         , nodejs
-        , yarn-berry
+        , pnpm_12
+        , fetchPnpmDeps
+        , pnpmConfigHook
+        , pnpmBuildHook
         , writeShellScript
         }:
 
         stdenv.mkDerivation (finalAttrs: {
-          pname = "yarn_playground";
+          pname = name;
           version = "0.1";
 
           src = with lib.fileset; toSource {
@@ -30,16 +33,12 @@
               ./.;
           };
 
-          offlineCache = yarn-berry.fetchYarnBerryDeps {
-            inherit (finalAttrs) src missingHashes;
-            hash = "sha256-3IbStliCI03O8J76aTScdDb7UxW0oZaLMOsj/IDlWM4=";
+          pnpmDeps = fetchPnpmDeps {
+            inherit (finalAttrs) pname version src;
+            pnpm = pnpm_12;
+            fetcherVersion = 4;
+            hash = "sha256-RtbC1hf9SLbmkUTyEy3yr/T6dkVIRfm0iVyaBq2T2Hk=";
           };
-
-          buildPhase = ''
-            runHook preBuild
-            yarn build
-            runHook postBuild
-          '';
 
           installPhase =
             let
@@ -55,14 +54,11 @@
               runHook postInstall
             '';
 
-          # In case native deps are used, generated the file by running
-          # nix run nixpkgs#yarn-berry.yarn-berry-fetcher missing-hashes yarn.lock > missing-hashes.json
-          missingHashes = ./missing-hashes.json;
-
           nativeBuildInputs = [
-            yarn-berry
-            yarn-berry.yarnBerryConfigHook
             nodejs
+            pnpm_12
+            pnpmConfigHook
+            pnpmBuildHook # runs `pnpm run build`
           ];
 
           meta.mainProgram = name;
@@ -102,6 +98,12 @@
           programs.biome = {
             enable = true;
             settings = builtins.fromJSON (builtins.readFile ./biome.json);
+            # treefmt-nix falls back to the 2.1.2 schema for unknown biome versions,
+            # update the hash when nixpkgs bumps biome
+            validate.schema = pkgs.fetchurl {
+              url = "https://biomejs.dev/schemas/${pkgs.biome.version}/schema.json";
+              hash = "sha256-Z2/XiQKRUc7xnI4FSe9HhhyqD+/llHZsSPpuj+8C4GA=";
+            };
           };
         };
       };

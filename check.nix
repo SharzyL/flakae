@@ -36,7 +36,7 @@ let
     (mkOutputCheck "cpp_meson_check" subflake_pkgs.cpp_meson "welcome: 4")
     (mkOutputCheck "python_uv_check" subflake_pkgs.python_uv "hello world from numpy")
     (mkOutputCheck "rust_check" subflake_pkgs.rust "hello, world!")
-    (mkOutputCheck "ts_yarn_check" subflake_pkgs.ts_yarn "Hello: 5 + 10 = 15")
+    (mkOutputCheck "ts_pnpm_check" subflake_pkgs.ts_pnpm "Hello: 5 + 10 = 15")
 
     (skippedCheck "lean")  # nothing can be checked
 
